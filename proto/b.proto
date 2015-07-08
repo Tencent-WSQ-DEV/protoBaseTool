@@ -1,0 +1,251 @@
+///////////////////////////////////////////////
+
+// 说明：登录请求参数
+
+// server name: yaaf_java_uid
+
+//
+
+package im.unilogin;
+
+
+
+option java_generic_services=false;
+
+option cc_generic_services =false;
+
+
+
+//@service=yaaf
+
+//@serviceName=yaaf_java_uid
+
+//@test_evn=10.136.149.161:16783
+
+//@l5=12335:12345
+
+//统一账号登录接口
+
+service UID_ACCOUNT_LOGIN {
+
+    //@cmd=13251
+
+    rpc tinyIdByWxCode(REQTinyIdByWxCode) returns(RESP);
+
+    //@cmd=13252
+
+    rpc tinyIdByWxToken(REQTinyIdByWxToken) returns(RESP);
+
+    //@cmd=13253
+
+    rpc tinyIdByUin(REQTinyIdByUin) returns(RESP);
+
+    //@cmd=13254
+
+    rpc tinyIdByDeviceId(REQTinyIdByDeviceId) returns(RESP);
+
+
+
+              //使用QQ互联获取Uid
+
+              //这里返回的uid就是uin
+
+              //@cmd=13255
+
+    rpc getUinAsUidByQQToken(REQTinyIdByQQToken) returns(RESP);
+
+              //使用QQ互联获取uid
+
+              //这里返回的uid是新生成的tinyid
+
+              //@cmd=13256
+
+    rpc getUidByQQToken(REQTinyIdByQQToken) returns(RESP);
+
+}
+
+
+
+//通过微信授权码获取tiny_id
+
+//cmd: 13251
+
+message REQTinyIdByWxCode
+
+{
+
+              //业务ID
+
+              required uint32 buz_id = 1;
+
+              //授权code
+
+              required string code = 2;
+
+              //terminal type终端类型
+
+              optional uint32 ttype = 3;
+
+              //终端版本号，如果ttype是移动端，一定要带终端版本号
+
+              optional string tversion = 4;
+
+}
+
+
+
+//通过微信授权token获取tiny_id
+
+//cmd: 13252
+
+message REQTinyIdByWxToken
+
+{
+
+              //业务ID
+
+              required uint32 buz_id = 1;
+
+              //授权token
+
+              required string token = 2;
+
+              //openid
+
+              required string openid = 3;
+
+              //scope
+
+              required string scope = 4;
+
+              //terminal type终端类型
+
+              optional uint32 ttype = 5;
+
+              //终端版本号，如果ttype是移动端，一定要带终端版本号
+
+              optional string tversion = 6;
+
+}
+
+
+
+//通过uin获取tiny_id
+
+//cmd: 13253
+
+message REQTinyIdByUin
+
+{
+
+              //业务ID
+
+              required uint32 buz_id = 1;
+
+              //使用QQ号获取tinyid,必需要auth_key&auth_type
+
+              required uint32 uin = 2;
+
+              //auth_key
+
+              required string auth_key=3;
+
+              //auth_type
+
+              required uint32 auth_type=4;
+
+              //terminal type终端类型
+
+              optional uint32 ttype = 5;
+
+              //终端版本号，如果ttype是移动端，一定要带终端版本号
+
+              optional string tversion = 6;
+
+}
+
+
+
+//通过设备ID
+
+//cmd: 13254
+
+message REQTinyIdByDeviceId
+
+{
+
+              //业务ID
+
+              required uint32 buz_id = 1;
+
+              //设备ID
+
+              required string device_id = 2;
+
+              //terminal type终端类型
+
+              optional uint32 ttype = 3;
+
+              //终端版本号，如果ttype是移动端，一定要带终端版本号
+
+              optional string tversion = 4;
+
+}
+
+
+
+//通过QQ互联token换取tiny_id(tinyid就是uin)
+
+//cmd: 13255
+
+message REQTinyIdByQQToken
+
+{
+
+              //业务ID
+
+              required uint32 buz_id = 1;
+
+              //授权token
+
+              required string token = 2;
+
+              //terminal type终端类型
+
+              optional uint32 ttype = 3;
+
+              //终端版本号，如果ttype是移动端，一定要带终端版本号
+
+              optional string tversion = 4;
+
+}
+
+
+
+message RESP
+
+{
+
+              //包头错误码为0时，存在以下数据
+
+              required uint64 tiny_id=1;                                 //对应的tiny_id
+
+              required string a2 = 2;                                                       //a2 key
+
+              required uint32 type = 3;                                    //帐号类型
+
+              required bool has_user_info = 4;       //是否存储了用户信息
+
+              required bool nuui = 5;                                                      //是否需要更新用户信息
+
+              optional string scope = 6;                                   //scope
+
+              optional string account_appid = 7;    //extra_appid
+
+              optional string sdk_uid = 8;                              //identifier for imsdk
+
+              optional string sdk_uid_key = 9;       //key for identifier
+
+              optional uint32 a2_appid = 10;                        //a2对应的appid，登录校验的时候需要这个appid
+
+};
